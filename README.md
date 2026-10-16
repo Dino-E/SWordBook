@@ -7,11 +7,13 @@ SWordBook doesn't try to be Word. It gives you the handful of things a book
 draft needs, chapter titles, dialogue, scene breaks and a navigator, plus
 something most word processors don't have: **three ways to see your
 manuscript**, from printed pages to one endless sheet. It saves plain `.docx` files, so when the draft is ready you can
-keep polishing it in Word, Google Docs or LibreOffice Writer, or upload it
-to Amazon KDP.
+keep polishing it in Word, Google Docs or LibreOffice Writer.
 
-> **Status: alpha (v0.1.0).** It works and saves real `.docx` files, but it
-> is young: keep backups of anything important.
+> **Status: alpha (v0.1.0).** It works and saves standard `.docx` files.
+> While you write, SWordBook keeps an automatic backup of your unsaved
+> changes and offers to recover them if it ever closes unexpectedly. That
+> backup is not a version history, though: it is deleted when you save. As
+> with any early release, keep your own copies of manuscripts that matter.
 
 ## ★ Three views, one manuscript
 
