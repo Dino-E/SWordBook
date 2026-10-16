@@ -1,13 +1,8 @@
-# SWordBook
+**A WordPad for book drafts.** A small, distraction-free word processor for drafting novels, stories and e-books.
 
-**A WordPad for books.** A small, distraction-free word processor for drafting
-novels, stories and e-books.
+SWordBook isn't trying to be Word. It offers the essential tools for book drafting: chapter titles, dialogue, scene breaks, a navigator, and comments. It also gives you **three ways to work on your manuscript**: paginated pages (like Word), one continuous sheet (like WordPad), or a combined view (SWordBook). You can also customize page lengths to organize your manuscript with one chapter per sheet.
 
-SWordBook doesn't try to be Word. It gives you the handful of things a book
-draft needs, chapter titles, dialogue, scene breaks and a navigator, plus
-something most word processors don't have: **three ways to see your
-manuscript**, from printed pages to one endless sheet. It saves plain `.docx` files, so when the draft is ready you can
-keep polishing it in Word, Google Docs or LibreOffice Writer.
+It saves standard `.docx` files, so when your draft is finished, you can give it the final formatting in Word, Google Docs, or LibreOffice Writer.
 
 > **Status: alpha (v0.1.0).** It works and saves standard `.docx` files.
 > While you write, SWordBook keeps an automatic backup of your unsaved
@@ -15,47 +10,32 @@ keep polishing it in Word, Google Docs or LibreOffice Writer.
 > backup is not a version history, though: it is deleted when you save. As
 > with any early release, keep your own copies of manuscripts that matter.
 
-## ★ Three views, one manuscript
+## ★ Three Views, One Manuscript
 
-The view mode is SWordBook's signature feature. The same book can be shown
-in three ways, and you can switch at any moment in **Settings → View**.
-Switching never touches the text or its formatting, so there is nothing to
-undo and nothing to lose.
+The view mode is SWordBook's signature feature. The same book can be displayed in three different ways, and you can switch between them at any time from **Settings → View**.
 
 | View | What you see | Best for |
 | --- | --- | --- |
-| **Pages** | Separate sheets with the paper size and margins you choose, exactly as they will print | Checking length, layout and page breaks |
-| **No pages** | One continuous sheet with no cuts between pages, at the same width as the printed page | Writing in flow, without page breaks interrupting a scene |
-| **Mixed** | A continuous sheet that splits only where *you* put a page break (Ctrl+Enter). Each sheet is as long as its content | Writing chapter by chapter: each chapter is its own sheet, however long it is |
+| **Pages** | Separate pages with your chosen paper size and margins, exactly as they will print | Checking length, layout and page breaks |
+| **No Pages** | One continuous sheet with no page breaks, at the same width as the printed page | Writing naturally without page breaks interrupting a scene |
+| **Mixed** | A continuous sheet that splits only where you insert a page break (Ctrl+Enter). Each sheet is as long as its content requires | Writing chapter by chapter, with each chapter on its own sheet regardless of length |
 
-**Mixed view** is the one you won't find elsewhere. Put a page break before
-each chapter and the manuscript turns into a stack of chapters, each on its
-own sheet: long chapters are long sheets, short chapters are short ones, and
-nothing is ever cut mid-paragraph. You still see where the book is divided
-without the constant interruptions of fixed pages.
+**Mixed view** gives you a different way to organize your manuscript. Insert a page break before each chapter, and your manuscript becomes a collection of chapters, each on its own sheet: long chapters get long sheets, short chapters get short sheets. Nothing gets cut off in the middle of a paragraph. You can still see where the book is divided without the constant interruptions of fixed-length pages.
 
-All three views lay out lines at the real page width, so line lengths always
-match the printed result. The view you choose is saved in the `.docx`, and it
-reopens the same way. Word and Writer open No pages and Mixed documents in
-their web layout.
+All three views wrap lines according to the actual page width, so line lengths always match the printed result. Your chosen view is saved in the `.docx` file, so the document reopens the same way. Word and Writer open documents created in No Pages and Mixed views using their web layout.
 
-Zoom goes from 50 % to 200 % (Ctrl + mouse wheel, or the slider in the
-status bar), with *Fit to width* and *Whole page*.
+Zoom ranges from 50% to 200% (Ctrl + mouse wheel or the slider in the status bar), with *Fit to Width* and *Whole Page* options.
 
-## Why SWordBook
+## Why SWordBook?
 
-- **A view for every stage.** Pages to review, No pages to write in flow,
-  Mixed to work chapter by chapter.
-- **Made for drafts.** Open it and write. Book styles are one click (or one
-  shortcut) away, and there is nothing else in the way.
-- **Book styles built in.** Each style matches what e-book readers expect,
-  so headings show up in the table of contents.
-- **Your files stay yours.** Everything is a standard `.docx`. There is no
-  account, cloud or proprietary format.
-- **Portable.** No installation. On Windows and Linux the whole program,
-  settings included, fits in one folder you can carry on a USB drive.
-- **It won't lose your work.** While there are unsaved changes, SWordBook
-  keeps a backup copy, and if it closes unexpectedly it offers to recover it.
+- **Three views, one manuscript.** Switch between Pages, No Pages and Mixed to review your layout, write without interruptions, or organize your draft chapter by chapter. Your manuscript adapts to the way you write.
+- **Built for book drafts.** Chapter titles, dialogue, thoughts, scene breaks and section headings are ready to use. Apply them with a click or a keyboard shortcut instead of formatting every element by hand.
+- **Your chapters, your way.** In Mixed view, each chapter can occupy its own sheet, regardless of length. Keep your manuscript organized without forcing every chapter into fixed-length pages.
+- **A simple editor with a purpose.** Get the straightforward writing experience of a lightweight text editor, with the book-specific tools that general-purpose editors aren't designed around.
+- **Navigate your manuscript.** Jump between chapters and sections, collapse headings, search and replace text, track your word count, and add comments without losing your place.
+- **Your files stay yours.** Work with standard `.docx` files and continue editing your manuscript in Microsoft Word, Google Docs or LibreOffice Writer whenever you need more advanced formatting.
+- **Portable and self-contained.** No installation or account required. On Windows and Linux, carry the program and its settings in a single folder, even on a USB drive.
+- **Extra protection for your writing.** SWordBook keeps a backup while you have unsaved changes and offers recovery if the program closes unexpectedly.
 
 ## Features
 
@@ -69,95 +49,77 @@ status bar), with *Fit to width* and *Whole page*.
 | Section | Ctrl+4 | Section heading inside a chapter |
 | Thoughts | Ctrl+5 | A character's inner voice (italics) |
 | Dialogue | Ctrl+6 | Starts a line with the dialogue dash (—) |
-| Quote | Ctrl+7 | Letters, epigraphs, quoted texts |
-| Scene break | Ctrl+8 | Centered `* * *` separator |
+| Quote | Ctrl+7 | Letters, epigraphs and quoted texts |
+| Scene Break | Ctrl+8 | Centered `* * *` separator |
 
-You can rename styles and change their font, size, spacing and dialogue
-symbol in `settings.ini`.
+You can rename styles and change their font, size, spacing and dialogue symbol in `settings.ini`.
 
-**Writing and formatting**
-- Bold, italic, underline, strikethrough, subscript and superscript, plus
-  font color and highlight.
-- Alignment, indents, line and paragraph spacing, letter spacing.
+**Writing and Formatting**
+
+- Bold, italic, underline, strikethrough, subscript and superscript, plus font color and highlighting.
+- Text alignment, indents, line spacing, paragraph spacing and letter spacing.
 - Numbered and bulleted lists.
-- Images, centered between paragraphs: drag to move them, use the handles to
-  resize them.
-- Page breaks with Ctrl+Enter (in Pages and Mixed views). Backspace at the
-  start of the new page removes the break.
-- Page size and margins (Letter, A4, A5, 6 × 9 in and other book sizes, or
-  custom).
+- Images centered between paragraphs: drag to move them and use the handles to resize them.
+- Page breaks with Ctrl+Enter (in Pages and Mixed views). Press Backspace at the beginning of the new page to remove the break.
+- Page size and margins (Letter, A4, A5, 6 × 9 inches and other book sizes, or custom dimensions).
 
-**Navigating a long book**
-- **Navigator** (F5): a tree of titles, subtitles and sections. Click one to
-  jump to it.
-- **Collapsible headings:** hide a chapter's text with the triangle next to
-  its title.
-- **Find and replace** (Ctrl+F / Ctrl+H), with all matches highlighted.
-- **Word count** in the status bar, also for the selected text.
+**Navigating Long Manuscripts**
+
+- **Navigator (F5):** A tree of titles, subtitles and sections. Click any item to jump directly to it.
+- **Collapsible headings:** Hide a chapter's text using the triangle next to its title.
+- **Find and Replace (Ctrl+F / Ctrl+H):** Search your manuscript with all matches highlighted.
+- **Word count:** Displayed in the status bar, including the word count of selected text.
 
 **Reviewing**
-- **Comments** (Ctrl+Alt+M) on any text, each with its own color, in a side
-  panel (F6). They are saved as real Word comments.
 
-**Interface languages:** English, Spanish, Portuguese, French, German,
-Italian, Chinese and Japanese (Settings → Language).
+- **Comments (Ctrl+Alt+M):** Add comments to any text, each with its own color, in a side panel (F6). Comments are saved as actual Word comments.
 
-## What it is not
+**Interface languages:** English, Spanish, Portuguese, French, German, Italian, Chinese and Japanese (Settings → Language).
 
-SWordBook is for writing the draft, not for final typesetting. Tables,
-headers and footers, footnotes, tracked changes and multiple columns are
-outside its scope. For those, open your `.docx` in a full word processor.
-When it opens a `.docx` from another program, it keeps the text and its
-formatting, but drops what it doesn't support.
+## What It Isn't
+
+SWordBook is designed for writing drafts, not for final typesetting. Tables, headers and footers, footnotes, tracked changes and multiple columns are outside its scope. For these tasks, open your `.docx` file in a full-featured word processor.
+
+When opening a `.docx` file created in another program, SWordBook preserves the text and its formatting but discards elements it doesn't support.
 
 ## Download
 
-Portable builds are on the [Releases](../../releases) page. No installation
-is needed:
+Portable builds are available on the [Releases](https://chatgpt.com/releases) page. No installation is required.
 
-| System | File | How to start it |
+| System | File | How to launch |
 | --- | --- | --- |
-| Windows 10/11 (64-bit) | `SWordBook-v…-windows-x64.zip` | Unzip and run `SWordBook.exe` |
-| Linux (64-bit) | `SWordBook-v…-linux-x64.tar.gz` | Extract and run `./SWordBook` |
-| macOS (Apple Silicon) | `SWordBook-v…-macos-arm64.zip` | Unzip, move `SWordBook.app` to Applications and open it |
+| Windows 10/11 (64-bit) | `SWordBook-v…-windows-x64.zip` | Extract the archive and run `SWordBook.exe` |
+| Linux (64-bit) | `SWordBook-v…-linux-x64.tar.gz` | Extract the archive and run `./SWordBook` |
+| macOS (Apple Silicon) | `SWordBook-v…-macos-arm64.zip` | Extract the archive, move `SWordBook.app` to Applications, and open it |
 
-**Windows:** SmartScreen may warn that the app is from an unknown publisher.
-Click **More info → Run anyway**.
+**Windows:** SmartScreen may warn you that the app is from an unknown publisher. Click **More info → Run anyway**.
 
-**macOS:** the app is not signed by Apple. The first time, right-click
-`SWordBook.app` → **Open** → **Open**. If macOS says it is damaged, run
-`xattr -cr /Applications/SWordBook.app` in Terminal.
+**macOS:** The app is not signed by Apple. The first time you open it, right-click `SWordBook.app` → **Open** → **Open**. If macOS reports that the app is damaged, run `xattr -cr /Applications/SWordBook.app` in Terminal.
 
-**Linux:** if it doesn't start, install `libxcb-cursor0`
-(`sudo apt install libxcb-cursor0`).
+**Linux:** If the app doesn't start, install `libxcb-cursor0` using `sudo apt install libxcb-cursor0`.
 
 ## Settings
 
-On Windows and Linux, settings are stored in `settings.ini`, next to the
-program. On macOS, they are stored in the app's data folder. The file is
-created on first launch with every option, and you can edit it by hand while
-the program is closed: default page size and margins, view, zoom, backup
-timing, and each style's name, font, size, color and spacing.
+On Windows and Linux, settings are stored in `settings.ini`, next to the program. On macOS, they are stored in the app's data folder.
 
-## Run from source
+The file is created on first launch and includes every available option. You can edit it manually while the program is closed to change the default page size and margins, view mode, zoom, backup intervals, and each style's name, font, size, color and spacing.
+
+## Run from Source
 
 Requires Python 3.9 or newer.
 
-```
+```bash
 pip install -r requirements.txt
 python swordbook.py
 ```
 
-## Build a portable package
+## Build a Portable Package
 
-```
+```bash
 python build.py
 ```
 
-The package for the current system is created in `release/`. When a release
-is published, GitHub Actions builds the Windows, Linux and macOS packages and
-attaches them to it (see `.github/workflows/build.yml`).
+The package for the current system is created in the `release/` folder. When a new release is published, GitHub Actions builds the Windows, Linux and macOS packages and attaches them to the release (see `.github/workflows/build.yml`).
 
 ## License
-
 MIT — © DinoSoft.1998
