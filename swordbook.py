@@ -5564,7 +5564,10 @@ _PAGE_KEYS_INI = {"width": "Page/width", "height": "Page/height",
 
 def settings_path():
     folder = os.path.dirname(os.path.abspath(sys.argv[0] or __file__))
-    if os.path.isdir(folder) and os.access(folder, os.W_OK):
+    # Inside a macOS .app nothing may be written (it would break the
+    # app's signature): the settings go to the program's data folder
+    in_app_bundle = sys.platform == "darwin" and ".app/Contents/" in folder
+    if not in_app_bundle and os.path.isdir(folder) and os.access(folder, os.W_OK):
         return os.path.join(folder, "settings.ini")
     return os.path.join(app_folder(), "settings.ini")
 

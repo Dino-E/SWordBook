@@ -72,7 +72,7 @@ def main():
     print(f"Building {package}", flush=True)
 
     run(sys.executable, "-m", "pip", "install", "--upgrade",
-        "PySide6", "pyinstaller", "pillow")
+        "PySide6-Essentials", "pyinstaller", "pillow")
 
     build_dir = os.path.join(HERE, "build")
     dist_dir = os.path.join(HERE, "dist")
