@@ -1,0 +1,45 @@
+name: Build
+
+# Builds the portable packages and attaches them to the release.
+# Runs when a release is published, or by hand from the Actions tab.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        # ubuntu-22.04: older glibc, so the Linux build runs on more distros
+        os: [windows-latest, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build
+        run: python build.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SWordBook-${{ matrix.os }}
+          path: release/*
+
+      - name: Attach to the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          if [ -z "$TAG" ]; then
+            TAG="v$(python -c "import re;print(re.search(r'^APP_VERSION = \"([^\"]+)\"',open('swordbook.py',encoding='utf-8').read(),re.M).group(1))")"
+          fi
+          gh release upload "$TAG" release/* --clobber || echo "No release $TAG; the files are in the run's artifacts"
