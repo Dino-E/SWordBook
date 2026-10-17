@@ -1,8 +1,8 @@
 # SWordBook
 
 **Un WordPad para libros.**
-<img width="1624" height="1007" alt="image" src="https://github.com/user-attachments/assets/216e1713-c459-4442-94a7-f8c937497618" />
 SWordBook es un editor de texto sencillo y sin distracciones, diseñado para escribir borradores de novelas, relatos y libros electrónicos.
+<img width="1624" height="1007" alt="image" src="https://github.com/user-attachments/assets/216e1713-c459-4442-94a7-f8c937497618" />
 
 ## Características
 
