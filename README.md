@@ -90,7 +90,7 @@ SWordBook se distribuye en paquetes portables.
 
 SWordBook se encuentra en desarrollo. Aunque guarda documentos estándar `.docx`, algunas funciones avanzadas de otros procesadores de texto pueden no ser compatibles. Igual que en cualquier procesador de texto, se recomienda conservar copias de seguridad propias de los documentos importantes.
 
-## Créditos
+## Autoría y créditos
 
 Desarrollado por DinoSoft.1998, con asistencia de desarrollo de Claude.ai.
 

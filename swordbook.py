@@ -48,6 +48,7 @@ import zipfile
 import datetime
 import getpass
 import posixpath
+import configparser
 from xml.etree import ElementTree as ET
 from xml.sax.saxutils import escape as xml_escape
 from PySide6.QtWidgets import (
@@ -3259,6 +3260,7 @@ class BarraFuente(QToolBar):
     def _estilos_aceptados(self, dialogo):
         GESTOR.adoptar(dialogo.trabajo)
         self.editor.actualizar_estilos()
+        guardar_estilos(GESTOR)
 
     # -- párrafo ------------------------------------------------------------
     @property
@@ -6658,6 +6660,242 @@ class CentroSuperpuesto(QWidget):
 # ---------------------------------------------------------------------------
 # Ventana principal
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Configuración del editor en config.ini: estilos, tema, colores, página y
+# tamaño de la ventana. Se guarda sola al aceptar los diálogos y al cerrar, y
+# se lee al abrir el programa. Un valor mal escrito se ignora (queda el de
+# fábrica); si falta el archivo se crea al guardar el primer cambio.
+# ---------------------------------------------------------------------------
+NOMBRE_CONFIG = "config.ini"
+CLAVES_VISTA = ("tema", "tema_interfaz", "tema_fondo", "color_hoja",
+                "espacio_superior")
+CLAVES_PAGINA = ("ancho", "alto", "superior", "inferior", "izquierdo", "derecho")
+_ALINEACION_POR_NOMBRE = {"izquierda": Qt.AlignLeft, "centro": Qt.AlignHCenter,
+                          "derecha": Qt.AlignRight, "justificado": Qt.AlignJustify}
+_NOMBRE_POR_ALINEACION = {v: k for k, v in _ALINEACION_POR_NOMBRE.items()}
+_RANGOS_ESTILO = {                       # campo numérico: (mínimo, máximo)
+    "font_size": (4, 200), "line_spacing": (50, 500),
+    "space_before": (0, 1000), "space_after": (0, 1000),
+    "indent_left": (-1000, 1000), "indent_right": (-1000, 1000),
+    "first_line_indent": (-1000, 1000), "letter_spacing": (-50, 100),
+}
+_ruta_config_cache = None
+
+
+def _carpeta_escribible(carpeta):
+    try:
+        prueba = os.path.join(carpeta, f".swordbook_{os.getpid()}.tmp")
+        with open(prueba, "w"):
+            pass
+        os.remove(prueba)
+        return True
+    except OSError:
+        return False
+
+
+def ruta_config():
+    """config.ini junto al programa (versión portable). Si esa carpeta no se
+    puede escribir (Program Files, el paquete .app de macOS) va a la carpeta
+    de configuración del usuario."""
+    global _ruta_config_cache
+    if _ruta_config_cache:
+        return _ruta_config_cache
+    if getattr(sys, "frozen", False):
+        carpeta = os.path.dirname(sys.executable)
+        en_paquete = sys.platform == "darwin" and ".app/Contents/" in sys.executable
+    else:
+        carpeta = os.path.dirname(os.path.abspath(__file__))
+        en_paquete = False
+    junto = os.path.join(carpeta, NOMBRE_CONFIG)
+    if os.path.isfile(junto) or (not en_paquete and _carpeta_escribible(carpeta)):
+        ruta = junto
+    else:
+        datos = QStandardPaths.writableLocation(QStandardPaths.AppConfigLocation)
+        try:
+            os.makedirs(datos, exist_ok=True)
+            ruta = os.path.join(datos, NOMBRE_CONFIG)
+        except (OSError, TypeError):
+            ruta = junto
+    _ruta_config_cache = ruta
+    return ruta
+
+
+def _leer_ini():
+    cp = configparser.ConfigParser(interpolation=None)
+    try:
+        cp.read(ruta_config(), encoding="utf-8")
+    except (OSError, UnicodeDecodeError, configparser.Error):
+        cp = configparser.ConfigParser(interpolation=None)    # archivo dañado
+    return cp
+
+
+def _escribir_ini(cp):
+    ruta = ruta_config()
+    try:
+        with open(ruta + ".tmp", "w", encoding="utf-8") as f:
+            f.write("# Configuración de SWordBook. Puedes editarla con el "
+                    "programa cerrado;\n# borra este archivo para volver a "
+                    "los valores de fábrica.\n\n")
+            cp.write(f)
+        os.replace(ruta + ".tmp", ruta)
+    except OSError:
+        pass                      # sin permisos o disco lleno: no es grave
+
+
+def _texto_valor(v):
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, float):
+        v = round(v, 3)
+        return str(int(v)) if v == int(v) else str(v)
+    return str(v)
+
+
+def _ini_numero(texto, minimo, maximo):
+    v = float(str(texto).replace(",", "."))
+    if not math.isfinite(v) or not minimo <= v <= maximo:
+        raise ValueError(texto)
+    return int(v) if v == int(v) else v
+
+
+def _ini_color(texto):
+    c = QColor(str(texto).strip())
+    if not c.isValid():
+        raise ValueError(texto)
+    return c.name().upper()
+
+
+# -- guardar ---------------------------------------------------------------
+def guardar_vista(config, con_pagina=False):
+    """Tema, colores y espacio superior; con `con_pagina`, también el tamaño
+    y los márgenes de la página (valores para documentos nuevos)."""
+    cp = _leer_ini()
+    cp["vista"] = {k: _texto_valor(config[k]) for k in CLAVES_VISTA if k in config}
+    if con_pagina:
+        cp["pagina"] = {k: _texto_valor(config[k]) for k in CLAVES_PAGINA}
+    _escribir_ini(cp)
+
+
+def guardar_estilos(gestor):
+    cp = _leer_ini()
+    for sec in [s for s in cp.sections() if s.startswith("estilo:")]:
+        cp.remove_section(sec)
+    cp["estilos"] = {"orden": ", ".join(gestor.orden)}
+    for id_ in gestor.orden:
+        e = gestor.datos[id_]
+        sec = {"nombre": e["nombre"], "visible": _texto_valor(bool(e["visible"])),
+               "siguiente": e["siguiente"], "nivel": str(int(e["nivel"]))}
+        for campo in CAMPOS_ESTILO:
+            v = e["propio"][campo]
+            sec[campo] = (_NOMBRE_POR_ALINEACION.get(v, "izquierda")
+                          if campo == "alignment" else _texto_valor(v))
+        cp[f"estilo:{id_}"] = sec
+    _escribir_ini(cp)
+
+
+def guardar_ventana(ventana):
+    cp = _leer_ini()
+    maximizada = ventana.isMaximized() or ventana.isFullScreen()
+    g = ventana.normalGeometry() if maximizada else ventana.geometry()
+    cp["ventana"] = {"ancho": str(g.width()), "alto": str(g.height()),
+                     "maximizada": _texto_valor(maximizada)}
+    _escribir_ini(cp)
+
+
+# -- cargar ----------------------------------------------------------------
+def _cargar_estilos(cp):
+    datos, orden_defecto = _predeterminados()
+    ids = [i.strip() for i in cp.get("estilos", "orden", fallback="").split(",")
+           if i.strip()]
+    orden = []
+    for id_ in ids:
+        sec = f"estilo:{id_}"
+        if id_ in orden or not cp.has_section(sec):
+            continue
+        s = cp[sec]
+        e = datos.get(id_) or {
+            "id": id_, "nombre": id_, "visible": True, "base": None,
+            "siguiente": id_, "nivel": 0, "propio": dict(BODY), "fijo": False}
+        if "nombre" in s:
+            e["nombre"] = s["nombre"].strip()
+        try:
+            e["visible"] = s.getboolean("visible", fallback=e["visible"])
+        except ValueError:
+            pass
+        if s.get("siguiente", "").strip():
+            e["siguiente"] = s["siguiente"].strip()
+        try:
+            e["nivel"] = int(_ini_numero(s.get("nivel", e["nivel"]), 0, 6))
+        except ValueError:
+            pass
+        for campo in CAMPOS_ESTILO:
+            if campo not in s:
+                continue
+            try:
+                if campo == "alignment":
+                    e["propio"][campo] = _ALINEACION_POR_NOMBRE[s[campo].strip().lower()]
+                elif campo in ("bold", "italic"):
+                    e["propio"][campo] = s.getboolean(campo)
+                elif campo == "font_color":
+                    e["propio"][campo] = _ini_color(s[campo])
+                elif campo == "font_family":
+                    if s[campo].strip():
+                        e["propio"][campo] = s[campo].strip()
+                else:
+                    e["propio"][campo] = _ini_numero(s[campo], *_RANGOS_ESTILO[campo])
+            except (ValueError, KeyError):
+                pass
+        datos[id_] = e
+        orden.append(id_)
+    for id_ in orden_defecto:              # los de fábrica nunca faltan
+        if id_ not in orden:
+            orden.append(id_)
+    for e in datos.values():               # «siguiente» debe existir
+        if e["siguiente"] not in datos:
+            e["siguiente"] = e["id"]
+    GESTOR.datos, GESTOR.orden = datos, orden
+
+
+def cargar_config():
+    """Lee config.ini y lo deja puesto (estilos y valores iniciales de la
+    vista y la página). Se llama antes de crear la ventana. Devuelve el
+    tamaño guardado de la ventana ({} si no hay)."""
+    cp = _leer_ini()
+    if cp.has_section("estilos"):
+        _cargar_estilos(cp)
+    v = cp["vista"] if cp.has_section("vista") else {}
+    if v.get("tema", "").strip() in dict(NOMBRES_TEMA):
+        PAGINA["tema"] = v["tema"].strip()
+    for k in ("tema_interfaz", "tema_fondo", "color_hoja"):
+        try:
+            PAGINA[k] = _ini_color(v[k])
+        except (KeyError, ValueError):
+            pass
+    try:
+        PAGINA["espacio_superior"] = _ini_numero(v["espacio_superior"], 0, 200)
+    except (KeyError, ValueError):
+        pass
+    if cp.has_section("pagina"):
+        try:
+            p = {k: _ini_numero(cp["pagina"][k], 0, 300) for k in CLAVES_PAGINA}
+            if (p["ancho"] >= 5 and p["alto"] >= 5          # como Configurar página
+                    and p["izquierdo"] + p["derecho"] <= p["ancho"] - 2
+                    and p["superior"] + p["inferior"] <= p["alto"] - 2):
+                PAGINA.update(p)
+        except (KeyError, ValueError):
+            pass
+    ventana = {}
+    if cp.has_section("ventana"):
+        try:
+            ventana["ancho"] = int(_ini_numero(cp["ventana"]["ancho"], 400, 10000))
+            ventana["alto"] = int(_ini_numero(cp["ventana"]["alto"], 300, 10000))
+            ventana["maximizada"] = cp["ventana"].getboolean("maximizada",
+                                                             fallback=False)
+        except (KeyError, ValueError):
+            ventana = {}
+    return ventana
+
+
 class Ventana(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -6727,7 +6965,7 @@ class Ventana(QMainWindow):
         enfocar = self.editor.setFocus
         self.enlace_pagina = EnlaceVentana(
             self.acciones["pagina"], lambda: VentanaPagina(self.vista.config, self),
-            al_aceptar=lambda d: self.vista.aplicar_config(d.config()),
+            al_aceptar=self._pagina_aceptada,
             al_cerrar=enfocar)
         self.enlace_fecha = EnlaceVentana(
             self.acciones["fecha"], lambda: VentanaFechaHora(self),
@@ -7029,6 +7267,7 @@ class Ventana(QMainWindow):
     def closeEvent(self, e):
         if self._confirmar_descartar():
             self._borrar_respaldo()        # cierre normal: ya no hace falta
+            guardar_ventana(self)
             e.accept()
         else:
             e.ignore()
@@ -7117,6 +7356,15 @@ class Ventana(QMainWindow):
             return
         self.panel_comentarios.enfocar(i)
 
+    def _pagina_aceptada(self, dialogo):
+        antes = dict(self.vista.config)
+        nueva = dialogo.config()
+        self.vista.aplicar_config(nueva)
+        # El tamaño y los márgenes solo se guardan si se cambiaron aquí (no
+        # los que traía el .docx abierto)
+        guardar_vista(self.vista.config,
+                      con_pagina=any(antes.get(k) != nueva[k] for k in CLAVES_PAGINA))
+
     def configurar_pagina(self):
         self.enlace_pagina.abrir()
 
@@ -7184,8 +7432,16 @@ if __name__ == "__main__":
     sin_tooltips = SinTooltips(app)
     app.installEventFilter(sin_tooltips)
     portapapeles_seguro_al_salir(app)
+    tamano = cargar_config()           # estilos, tema y página de config.ini
     ventana = Ventana()
-    ventana.show()
+    if tamano:
+        pantalla = app.primaryScreen().availableGeometry()
+        ventana.resize(min(tamano["ancho"], pantalla.width()),
+                       min(tamano["alto"], pantalla.height()))
+    if tamano.get("maximizada"):
+        ventana.showMaximized()
+    else:
+        ventana.show()
     # Copia de un documento sin título que quedó de un cierre inesperado
     QTimer.singleShot(0, ventana.comprobar_respaldo_sin_titulo)
     sys.exit(app.exec())
