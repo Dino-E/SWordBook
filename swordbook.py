@@ -2825,6 +2825,9 @@ def icono_aplicacion():
     return icono
 
 
+app_icon = icono_aplicacion  # nombre que usa build.py
+
+
 def guardar_ico(ruta):
     """Guarda el icono como .ico con todos sus tamaños (para un acceso
     directo o un ejecutable). Cada tamaño va como PNG dentro del .ico."""
