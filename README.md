@@ -8,13 +8,13 @@ SWordBook es un editor de texto sencillo y sin distracciones, diseñado para esc
 ## Características
 
 - **Archivos DOCX:** crea, edita y guarda documentos compatibles con Word.
-- **Estilos de escritura:** aplica estilos para títulos, subtítulos, texto normal, diálogos, pensamientos, citas y separadores de escena.
+- **Estilos de escritura:** aplica estilos para títulos, subtítulos, texto normal, etc.
 - **Formato de texto:** personaliza fuentes, colores, alineación, sangrías, interlineado y espaciado.
 - **Navegador:** organiza y recorre capítulos y secciones mediante los títulos del documento.
 - **Buscar y reemplazar:** encuentra y modifica texto fácilmente.
 - **Comentarios:** añade anotaciones al texto seleccionado y adminístralas desde un panel lateral.
 - **Copias de seguridad:** ayuda a proteger tu trabajo y recuperar documentos tras un cierre inesperado.
-- **Vista continua:** escribe en un espacio de trabajo sin interrupciones entre páginas.
+- **Vista continua:** escribe en un espacio de trabajo sin interrupciones entre páginas tal como en WordPad.
 - **Temas:** elige entre los temas Claro, Oscuro y Personalizado.
 - **Ajuste de la hoja:** personaliza el tamaño, los márgenes y el color de la hoja sin alterar el contenido del documento.
 - **Zoom:** ajusta la escala de visualización para adaptar el espacio de escritura a tus preferencias.
