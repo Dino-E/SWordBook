@@ -4,6 +4,7 @@
 SWordBook es un editor de texto sencillo y sin distracciones, diseñado para escribir borradores de novelas, relatos y libros electrónicos.
 
 <img width="1624" height="1007" alt="image" src="https://github.com/user-attachments/assets/216e1713-c459-4442-94a7-f8c937497618" />
+<img width="1569" height="975" alt="image" src="https://github.com/user-attachments/assets/1f86e625-e995-444b-b44a-33301f788484" />
 
 ## Características
 
